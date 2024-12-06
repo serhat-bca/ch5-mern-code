@@ -10,7 +10,7 @@ const App = () => {
   const [showAll, setShowAll] = useState(true);
   const [notification, setNotification] = useState(null);
 
-  const filteredList = showAll ? movies : movies.filter((m) => m.watchList);
+  const filteredList = showAll ? movies : movies.filter((m) => m.watchlist);
   // const moviesData = axios.get("http://localhost:3001/movies");
   // console.log(moviesData);
 
@@ -25,7 +25,7 @@ const App = () => {
     e.preventDefault();
     const newMovieObj = {
       title: movieName,
-      watchList: false,
+      watchlist: false,
       year: releaseYear,
     };
     movieService.addMovie(newMovieObj).then((data) => {
@@ -42,7 +42,7 @@ const App = () => {
   };
 
   const updateMovie = (movie) => {
-    const updatedMovie = { ...movie, watchList: !movie.watchList };
+    const updatedMovie = { ...movie, watchlist: !movie.watchlist };
     // axios
     //   .put(`http://localhost:3001/movies/${movie.id}`, updatedMovie)
     //   .then((res) =>

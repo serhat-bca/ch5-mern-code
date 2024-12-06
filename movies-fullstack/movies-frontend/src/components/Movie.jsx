@@ -3,7 +3,7 @@ const Movie = ({ movie, updateMovie }) => (
   <li>
     {movie.title} {movie?.year && `(${movie.year})`}
     <button onClick={() => updateMovie(movie)}>
-      {movie.watchList ? "Remove" : "Add"}
+      {movie.watchlist ? "Remove" : "Add"}
     </button>
   </li>
 );
