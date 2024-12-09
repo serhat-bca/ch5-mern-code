@@ -5,6 +5,26 @@ const cors = require("cors");
 app.use(cors());
 app.use(express.json());
 app.use(express.static("dist"));
+// require dotenv
+require("dotenv").config();
+// require mongoose
+const mongoose = require("mongoose");
+
+console.log("uri: ", process.env.MONGODB_URI);
+
+const DB_URI = process.env.MONGODB_URI;
+// mongoose setup and connection
+mongoose.set("strictQuery", false);
+mongoose.connect(DB_URI);
+
+// create movie schema
+const movieSchema = new mongoose.Schema({
+  title: String,
+  watchlist: Boolean,
+});
+
+// create mongoose model
+const Movie = mongoose.model("Movie", movieSchema);
 
 const requestLogger = (req, res, next) => {
   console.log(`Request Method: ${req.method}`);
