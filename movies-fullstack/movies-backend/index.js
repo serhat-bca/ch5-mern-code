@@ -26,6 +26,14 @@ const movieSchema = new mongoose.Schema({
   watchlist: Boolean,
 });
 
+// configure toJSON method
+movieSchema.set("toJSON", {
+  transform: (doc, ret) => {
+    ret.id = ret._id.toString();
+    delete ret._id;
+  },
+});
+
 // create mongoose model
 const Movie = mongoose.model("Movie", movieSchema);
 
@@ -42,12 +50,6 @@ app.use(requestLogger);
 
 const port = 3001;
 
-let movies = [
-  { id: 1, title: "Inception", watchlist: true },
-  { id: 2, title: "The Matrix", watchlist: false },
-  { id: 3, title: "Interstellar", watchlist: true },
-];
-
 app.post("/api/movies", (req, res) => {
   const { title, watchlist } = req.body;
   if (!title) {
@@ -63,12 +65,14 @@ app.post("/api/movies", (req, res) => {
   }
 });
 
-app.get("/api/movies", (req, res) => {
+app.get("/api/movies", async (req, res) => {
+  const movies = await Movie.find({});
+  console.log(movies);
   res.json(movies);
 });
 
-app.get("/api/movies/:id", (req, res) => {
-  const movie = movies.find((m) => m.id === Number(req.params.id));
+app.get("/api/movies/:id", async (req, res) => {
+  const movie = await Movie.findById(req.params.id);
   if (!movie) {
     res.status(404).json({ error: "Movie not found" });
   } else {
