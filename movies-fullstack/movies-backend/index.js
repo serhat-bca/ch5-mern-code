@@ -10,12 +10,15 @@ require("dotenv").config();
 // require mongoose
 const mongoose = require("mongoose");
 
-console.log("uri: ", process.env.MONGODB_URI);
-
 const DB_URI = process.env.MONGODB_URI;
 // mongoose setup and connection
 mongoose.set("strictQuery", false);
-mongoose.connect(DB_URI);
+mongoose
+  .connect(DB_URI)
+  .then(() => console.log("DB Connection Established"))
+  .catch((e) => {
+    console.log("Error connecting the DB: ", e.message);
+  });
 
 // create movie schema
 const movieSchema = new mongoose.Schema({
