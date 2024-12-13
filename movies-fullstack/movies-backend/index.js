@@ -22,18 +22,14 @@ app.use(requestLogger);
 
 const port = 3001;
 
-app.post("/api/movies", (req, res) => {
+app.post("/api/movies", async (req, res) => {
   const { title, watchlist } = req.body;
   if (!title) {
     return res.status(400).json({ error: "Title is required" });
   } else {
-    const movie = {
-      id: `${Date.now()}${Math.floor(Math.random() * 10000)}`,
-      title,
-      watchlist: watchlist || false,
-    };
-    movies.push(movie);
-    return res.status(201).json(movie);
+    const movie = new Movie({ title, watchlist: watchlist || false });
+    const savedMovie = await movie.save();
+    res.json(savedMovie);
   }
 });
 
