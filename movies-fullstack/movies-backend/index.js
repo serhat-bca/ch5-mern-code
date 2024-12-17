@@ -61,13 +61,18 @@ app.get("/api/movies/:id", async (req, res, next) => {
   }
 });
 
-app.delete("/api/movies/:id", (req, res) => {
-  const movie = movies.find((m) => m.id === Number(req.params.id));
-  if (!movie) {
-    res.status(404).json({ error: "Movie not found!" });
-  } else {
-    movies = movies.filter((m) => m.id != req.params.id);
-    res.json({ message: "Movie deleted successfully" });
+app.delete("/api/movies/:id", async (req, res, next) => {
+  try {
+    const movie = await Movie.findByIdAndDelete(req.params.id);
+    if (!movie) {
+      res.status(404).json({ error: "Movie not found!" });
+    } else {
+      res
+        .status(200)
+        .json({ message: `The Movie [${movie.title}] deleted successfully.` });
+    }
+  } catch (error) {
+    next(error);
   }
 });
 
