@@ -17,6 +17,15 @@ const requestLogger = (req, res, next) => {
   next();
 };
 
+// middleware for error handling
+const errorHandler = (error, req, res, next) => {
+  console.log("error message: ", error.message);
+  if (error.name === "CastError") {
+    return res.status(400).json({ error: "invalid id" });
+  }
+  next(error);
+};
+
 // utilize requestLogger middleware
 app.use(requestLogger);
 
@@ -65,6 +74,8 @@ app.delete("/api/movies/:id", (req, res) => {
 app.get("/", (req, res) => {
   res.send("Whats up");
 });
+
+app.use(errorHandler);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
