@@ -15,7 +15,7 @@ mongoose
 
 // create movie schema
 const movieSchema = new mongoose.Schema({
-  title: String,
+  title: { type: String, required: true, minLength: 2 },
   watchlist: Boolean,
 });
 
