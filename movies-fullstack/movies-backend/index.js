@@ -76,6 +76,24 @@ app.delete("/api/movies/:id", async (req, res, next) => {
   }
 });
 
+app.put("/api/movies/:id", async (req, res, next) => {
+  try {
+    const { title, watchlist } = req.body;
+    const updatedMovie = await Movie.findByIdAndUpdate(
+      req.params.id,
+      { title, watchlist },
+      { new: true }
+    );
+    if (updatedMovie) {
+      res.status(200).json(updatedMovie);
+    } else {
+      res.status(404).json({ error: "Movie not found" });
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
 app.get("/", (req, res) => {
   res.send("Whats up");
 });
