@@ -39,12 +39,16 @@ app.get("/api/movies", async (req, res) => {
   res.json(movies);
 });
 
-app.get("/api/movies/:id", async (req, res) => {
-  const movie = await Movie.findById(req.params.id);
-  if (!movie) {
-    res.status(404).json({ error: "Movie not found" });
-  } else {
-    res.json(movie);
+app.get("/api/movies/:id", async (req, res, next) => {
+  try {
+    const movie = await Movie.findById(req.params.id);
+    if (!movie) {
+      res.status(404).json({ error: "Movie not found" });
+    } else {
+      res.json(movie);
+    }
+  } catch (error) {
+    next(error);
   }
 });
 
