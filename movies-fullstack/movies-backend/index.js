@@ -31,14 +31,18 @@ app.use(requestLogger);
 
 const port = 3001;
 
-app.post("/api/movies", async (req, res) => {
-  const { title, watchlist } = req.body;
-  if (!title) {
-    return res.status(400).json({ error: "Title is required" });
-  } else {
-    const movie = new Movie({ title, watchlist: watchlist || false });
-    const savedMovie = await movie.save();
-    res.json(savedMovie);
+app.post("/api/movies", async (req, res, next) => {
+  try {
+    const { title, watchlist } = req.body;
+    if (!title) {
+      return res.status(400).json({ error: "Title is required" });
+    } else {
+      const movie = new Movie({ title, watchlist: watchlist || false });
+      const savedMovie = await movie.save();
+      res.json(savedMovie);
+    }
+  } catch (error) {
+    next(error);
   }
 });
 
