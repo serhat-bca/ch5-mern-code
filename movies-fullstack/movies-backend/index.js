@@ -22,6 +22,8 @@ const errorHandler = (error, req, res, next) => {
   console.log("error message: ", error.message);
   if (error.name === "CastError") {
     return res.status(400).json({ error: "invalid id" });
+  } else if (error.name === "ValidationError") {
+    return res.status(400).json({ error: error.message });
   }
   next(error);
 };
@@ -48,7 +50,6 @@ app.post("/api/movies", async (req, res, next) => {
 
 app.get("/api/movies", async (req, res) => {
   const movies = await Movie.find({});
-  console.log(movies);
   res.json(movies);
 });
 
@@ -86,7 +87,7 @@ app.put("/api/movies/:id", async (req, res, next) => {
     const updatedMovie = await Movie.findByIdAndUpdate(
       req.params.id,
       { title, watchlist },
-      { new: true }
+      { new: true, runValidators: true }
     );
     if (updatedMovie) {
       res.status(200).json(updatedMovie);
